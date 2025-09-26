@@ -1,0 +1,24 @@
+# mastodon-assets-precompile.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mastodon-assets-precompile
+  namespace: mastodon
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mastodon-assets
+        image: ghcr.io/mastodon/mastodon:v4.3.1
+        command: ["bundle", "exec", "rails", "assets:precompile"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+        volumeMounts:
+        - name: media
+          mountPath: /mastodon/public/system
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: mastodon-media

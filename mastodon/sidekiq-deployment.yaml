@@ -1,0 +1,37 @@
+# sidekiq-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mastodon-sidekiq
+  namespace: mastodon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mastodon-sidekiq
+  template:
+    metadata:
+      labels:
+        app: mastodon-sidekiq
+    spec:
+      containers:
+      - name: sidekiq
+        image: ghcr.io/mastodon/mastodon:v4.3.1
+        command: ["bundle", "exec", "sidekiq"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+        volumeMounts:
+        - name: media
+          mountPath: /mastodon/public/system
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: mastodon-media

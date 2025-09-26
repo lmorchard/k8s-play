@@ -1,0 +1,24 @@
+# mastodon-db-migrate.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mastodon-db-migrate
+  namespace: mastodon
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mastodon-db-migrate
+        image: ghcr.io/mastodon/mastodon:v4.3.1
+        command: ["bundle", "exec", "rails", "db:migrate"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+        volumeMounts:
+        - name: media
+          mountPath: /mastodon/public/system
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: mastodon-media

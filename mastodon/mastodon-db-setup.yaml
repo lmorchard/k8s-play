@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mastodon-db-setup
+  namespace: mastodon
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mastodon-db-setup
+        image: ghcr.io/mastodon/mastodon:v4.3.1
+        command: ["bundle", "exec", "rails", "db:setup"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: mastodon-media
+          

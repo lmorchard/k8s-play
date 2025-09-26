@@ -1,0 +1,44 @@
+# streaming-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mastodon-streaming
+  namespace: mastodon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mastodon-streaming
+  template:
+    metadata:
+      labels:
+        app: mastodon-streaming
+    spec:
+      containers:
+      - name: streaming
+        image: ghcr.io/mastodon/mastodon-streaming:v4.3.1
+        command: ["node", "./streaming/index.js"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+        ports:
+        - containerPort: 4000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mastodon-streaming
+  namespace: mastodon
+spec:
+  selector:
+    app: mastodon-streaming
+  ports:
+  - port: 4000
+    targetPort: 4000
