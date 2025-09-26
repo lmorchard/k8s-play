@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mastodon-web
+  namespace: mastodon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mastodon-web
+  template:
+    metadata:
+      labels:
+        app: mastodon-web
+    spec:
+      containers:
+      - name: web
+        image: ghcr.io/mastodon/mastodon:v4.3.1
+        command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+        envFrom:
+        - secretRef:
+            name: mastodon-config
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: media
+          mountPath: /mastodon/public/system
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: mastodon-media

@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mastodon-config
+  namespace: mastodon
+type: Opaque
+stringData:
+  # Database
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: mastodon_production
+  DB_USER: mastodon
+  DB_PASS: mastodon_db_password  # Match postgres password
+  
+  # Redis
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  
+  # Federation
+  LOCAL_DOMAIN: mastodon.local  # Change to your domain
+  
+  # Security (generate these!)
+  SECRET_KEY_BASE: "572f0df7c7b674b1e548c6ed1b7e2820841b270ebe2d012aab1344e487239a04f42c53a713394342bae6b9e0e09a9c72d8d7b3a0acf73e710e4028b5f8f773d2"
+  OTP_SECRET: "e5e6eacf7436bb62f65222f7da163e945d853848036418bc295359f660d646ded1608540b7285749dca1ca5b25664142a9e45e8f10e5828508939c8334a9aa15"
+
+  # Vapid keys (generate with: bundle exec rake mastodon:webpush:generate_vapid_key)
+  VAPID_PRIVATE_KEY: "369fd0be0ebccdffe1a7905d7109bfd911a901ee68706b8ab52caa1c3223a55b46f2754ec7725cc250fe47249fd952d973a66e5f173ccabf09b75287f220758a"
+  VAPID_PUBLIC_KEY: "dd2fa981245ba57caec15f7f36b63dcf23f92cc52f2c01d915f1296b9c6253f92d52dbdcb5827abc6b03fa0619bdcb59fcbfe7f3d26cdc4822a02f7d68c3a84a"
+  
+  # Basic settings
+  RAILS_ENV: production
+  NODE_ENV: production
+  RAILS_LOG_LEVEL: info
+  SINGLE_USER_MODE: "false"
