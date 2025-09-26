@@ -18,7 +18,8 @@ stringData:
   
   # Federation
   #LOCAL_DOMAIN: mastodon.local  # Change to your domain
-  LOCAL_DOMAIN: "192.168.0.200:30080"  # Change this
+  #LOCAL_DOMAIN: "192.168.0.200:30080"  # Change this
+  LOCAL_DOMAIN: "localhost:8080"  # Change this
 
   # Security (generate these!)
   SECRET_KEY_BASE: "572f0df7c7b674b1e548c6ed1b7e2820841b270ebe2d012aab1344e487239a04f42c53a713394342bae6b9e0e09a9c72d8d7b3a0acf73e710e4028b5f8f773d2"
